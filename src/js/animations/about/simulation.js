@@ -47,7 +47,7 @@ export function initSimulation() {
     containerHeight + 80,
     containerWidth + 320,
     160,
-    { render: { fillStyle: "#000000" } }
+    { render: { fillStyle: "#1A1A1A" } }
   );
   const wallLeft = createStaticBoundary(
     -80,
