@@ -83,37 +83,37 @@ export function initSimulation() {
       "B",
       214.4,
       284,
-      "https://uploads-ssl.webflow.com/664668a37ea0579ad7c8e569/6671d0a5392ce8923e0202e2_B.svg"
+      "https://cdn.jsdelivr.net/gh/CarterOgunsola/balky-20240v2@master/src/assets/balky/b-balky.svg"
     ),
     createTag(
       "A",
       267.2,
       284,
-      "https://uploads-ssl.webflow.com/664668a37ea0579ad7c8e569/6671d0a502ea4848a1274be9_A.svg"
+      "https://cdn.jsdelivr.net/gh/CarterOgunsola/balky-20240v2@master/src/assets/balky/a-balky.svg"
     ),
     createTag(
       "L",
       175.6,
       284,
-      "https://uploads-ssl.webflow.com/664668a37ea0579ad7c8e569/6671d0a5f6cb4831eba1db0d_L.svg"
+      "https://cdn.jsdelivr.net/gh/CarterOgunsola/balky-20240v2@master/src/assets/balky/l-balky.svg"
     ),
     createTag(
       "K",
       234,
       284,
-      "https://uploads-ssl.webflow.com/664668a37ea0579ad7c8e569/6671d0a5464359cfc10df5b2_k.svg"
+      "https://cdn.jsdelivr.net/gh/CarterOgunsola/balky-20240v2@master/src/assets/balky/k-balky.svg"
     ),
     createTag(
       "Y",
       243.2,
       284,
-      "https://uploads-ssl.webflow.com/664668a37ea0579ad7c8e569/669c14378b54150bedb63f77_balky-y.svg"
+      "https://cdn.jsdelivr.net/gh/CarterOgunsola/balky-20240v2@master/src/assets/balky/y-balky.svg"
     ),
     createTag(
       ".",
       56.8,
       55.6,
-      "https://uploads-ssl.webflow.com/664668a37ea0579ad7c8e569/669c1437d80044ae7c9877ae_b-dot.svg"
+      "https://cdn.jsdelivr.net/gh/CarterOgunsola/balky-20240v2@master/src/assets/balky/dot-balky.svg"
     ),
   ];
 
