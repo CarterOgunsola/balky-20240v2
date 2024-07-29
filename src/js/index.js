@@ -18,6 +18,7 @@ import { imgScrollScale } from "./animations/imgScrollScale";
 import { genAnimation } from "./animations/genAnimation";
 import { utahTime } from "./animations/utahTime";
 import { initLoadTransition } from "./animations/loadTransition";
+import { initializeVideoPlayers } from "./animations/vidPlyr";
 //import Math from "./animations/about/Math";
 // import RGBShiftEffect from "./animations/about/RGBShiftEffect";
 // import { initWipeEffect } from "./animations/imgWhipe";
@@ -46,6 +47,7 @@ window.addEventListener("DOMContentLoaded", () => {
   imgScrollScale();
   genAnimation();
   utahTime();
+  initializeVideoPlayers();
 
   // initWipeEffect();
 

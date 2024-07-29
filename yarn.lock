@@ -41,6 +41,16 @@
   resolved "https://registry.npmjs.org/@types/estree/-/estree-1.0.5.tgz"
   integrity sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==
 
+core-js@^3.26.1:
+  version "3.37.1"
+  resolved "https://registry.npmjs.org/core-js/-/core-js-3.37.1.tgz"
+  integrity sha512-Xn6qmxrQZyB0FFY8E3bgRXei3lWDJHhvI+u0q9TKIYM49G8pAr0FgnnrFRAmsbptZL1yxRADVXn+x5AGsbBfyw==
+
+custom-event-polyfill@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.npmjs.org/custom-event-polyfill/-/custom-event-polyfill-1.0.7.tgz"
+  integrity sha512-TDDkd5DkaZxZFM8p+1I3yAlvM3rSr1wbrOliG4yJiwinMZN8z/iGL7BTlDkrJcYTmgUSb4ywVCc3ZaUtOtC76w==
+
 dat.gui@^0.7.9:
   version "0.7.9"
   resolved "https://registry.npmjs.org/dat.gui/-/dat.gui-0.7.9.tgz"
@@ -112,6 +122,11 @@ kute.js@^2.2.4:
     minifill "^0.0.17"
     svg-path-commander "1.0.5"
 
+loadjs@^4.2.0:
+  version "4.3.0"
+  resolved "https://registry.npmjs.org/loadjs/-/loadjs-4.3.0.tgz"
+  integrity sha512-vNX4ZZLJBeDEOBvdr2v/F+0aN5oMuPu7JTqrMwp+DtgK+AryOlpy6Xtm2/HpNr+azEa828oQjOtWsB6iDtSfSQ==
+
 matter-js@^0.19.0:
   version "0.19.0"
   resolved "https://registry.npmjs.org/matter-js/-/matter-js-0.19.0.tgz"
@@ -137,6 +152,17 @@ picomatch@^2.3.1:
   resolved "https://registry.npmjs.org/picomatch/-/picomatch-2.3.1.tgz"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
 
+plyr@^3.7.8:
+  version "3.7.8"
+  resolved "https://registry.npmjs.org/plyr/-/plyr-3.7.8.tgz"
+  integrity sha512-yG/EHDobwbB/uP+4Bm6eUpJ93f8xxHjjk2dYcD1Oqpe1EcuQl5tzzw9Oq+uVAzd2lkM11qZfydSiyIpiB8pgdA==
+  dependencies:
+    core-js "^3.26.1"
+    custom-event-polyfill "^1.0.7"
+    loadjs "^4.2.0"
+    rangetouch "^2.0.1"
+    url-polyfill "^1.1.12"
+
 postcss@^8.4.32:
   version "8.4.33"
   resolved "https://registry.npmjs.org/postcss/-/postcss-8.4.33.tgz"
@@ -145,6 +171,11 @@ postcss@^8.4.32:
     nanoid "^3.3.7"
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
+
+rangetouch@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/rangetouch/-/rangetouch-2.0.1.tgz"
+  integrity sha512-sln+pNSc8NGaHoLzwNBssFSf/rSYkqeBXzX1AtJlkJiUaVSJSbRAWJk+4omsXkN+EJalzkZhWQ3th1m0FpR5xA==
 
 rollup@^1.20.0||^2.0.0||^3.0.0||^4.0.0, rollup@^4.2.0:
   version "4.9.6"
@@ -194,6 +225,11 @@ three@^0.164.1:
   version "0.164.1"
   resolved "https://registry.npmjs.org/three/-/three-0.164.1.tgz"
   integrity sha512-iC/hUBbl1vzFny7f5GtqzVXYjMJKaTPxiCxXfrvVdBi1Sf+jhd1CAkitiFwC7mIBFCo3MrDLJG97yisoaWig0w==
+
+url-polyfill@^1.1.12:
+  version "1.1.12"
+  resolved "https://registry.npmjs.org/url-polyfill/-/url-polyfill-1.1.12.tgz"
+  integrity sha512-mYFmBHCapZjtcNHW0MDq9967t+z4Dmg5CJ0KqysK3+ZbyoNOWQHksGCTWwDhxGXllkWlOc10Xfko6v4a3ucM6A==
 
 vite-plugin-glsl@^1.3.0:
   version "1.3.0"
