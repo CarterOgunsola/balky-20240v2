@@ -26,6 +26,7 @@ import { initializeVideoPlayers } from "./animations/vidPlyr";
 // Function to check the current page
 const isWorkPage = () => window.location.pathname === "/work";
 const isAboutPage = () => window.location.pathname === "/about";
+const isContactPage = () => window.location.pathname === "/contact";
 
 // Mandatory scripts to load first
 window.addEventListener("DOMContentLoaded", () => {
@@ -56,31 +57,15 @@ window.addEventListener("DOMContentLoaded", () => {
     initSwipers();
   }
 
-  // Scripts specific to the /work page
+  // Scripts specific to the /about page
   if (isAboutPage()) {
     initSimulation();
     initHeadline();
-    // document.addEventListener("DOMContentLoaded", () => {
-    //   const containerElement = document.querySelector(".tag-canvas");
+  }
 
-    //   const observer = new IntersectionObserver((entries, observer) => {
-    //     entries.forEach((entry) => {
-    //       if (entry.isIntersecting) {
-    //         initSimulation();
-    //         observer.disconnect();
-    //       }
-    //     });
-    //   }, {});
-
-    //   observer.observe(containerElement);
-    // });
-
-    //RGBShiftEffect starts here
-    // Initialize RGBShiftEffect
-    // const container = document.getElementById("container");
-    // const itemsWrapper = container;
-    // const rgbShiftEffect = new RGBShiftEffect(container, itemsWrapper);
-    //RGBShiftEffect ends here
+  // Scripts specific to the /contact page
+  if (isContactPage()) {
+    initHeadline();
   }
 });
 
