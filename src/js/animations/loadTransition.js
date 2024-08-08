@@ -20,7 +20,6 @@ export function initLoadTransition() {
       onComplete: () => {
         sessionStorage.setItem("firstVisit", "false");
         pageLoader.style.display = "none";
-        pageLoadTrigger.click();
       },
     });
 
@@ -40,7 +39,11 @@ export function initLoadTransition() {
         { scale: 0, duration: 1, stagger: 0.1, ease: "expo.out" },
         "-=0.3"
       )
-      .to(loaderWrap, { height: "0%", duration: 1, ease: "expo.out" }, "-=0.5");
+      .to(loaderWrap, { height: "0%", duration: 1, ease: "expo.out" }, "-=0.5")
+      .add(() => {
+        console.log("Page load trigger clicked (first visit)");
+        pageLoadTrigger.click();
+      }, "-=0.751");
   };
 
   // Function to animate elements for page-to-page transitions
@@ -61,11 +64,12 @@ export function initLoadTransition() {
       },
     });
 
-    tl.to(
-      loaderWrap,
-      { height: "100%", duration: 0.8, ease: "expo.out" },
-      0
-    ).to(brandLogo, { yPercent: 0, duration: 1, ease: "expo.inOut" }, "-=1");
+    tl.to(loaderWrap, { height: "100%", duration: 0.8, ease: "expo.out" }, 0)
+      .to(brandLogo, { yPercent: 0, duration: 1, ease: "expo.inOut" }, "-=1")
+      .add(() => {
+        console.log("Page load trigger clicked (page-to-page transition)");
+        pageLoadTrigger.click();
+      }, "-=0.751");
   };
 
   // Event listener for internal link clicks
@@ -94,7 +98,11 @@ export function initLoadTransition() {
     const tl = gsap.timeline();
     tl.to(brandLogo, { yPercent: -100, duration: 1, ease: "expo.inOut" }, 0)
       .to(loaderWrap, { height: "0%", duration: 1, ease: "expo.out" }, "-=0.5")
-      .set(pageLoader, { display: "none" });
+      .set(pageLoader, { display: "none" })
+      .add(() => {
+        console.log("Page load trigger clicked (back button navigation)");
+        pageLoadTrigger.click();
+      }, "-=0.751");
   }
 
   window.onpageshow = function (event) {

@@ -19,11 +19,16 @@ import { genAnimation } from "./animations/genAnimation";
 import { utahTime } from "./animations/utahTime";
 import { initLoadTransition } from "./animations/loadTransition";
 import { initializeVideoPlayers } from "./animations/vidPlyr";
+//start of page_load_triggers
+import { homeLoad } from "./animations/pageload/homeLoad";
+import { aboutLoad } from "./animations/pageload/aboutLoad";
+//end of page_load_triggers
 //import Math from "./animations/about/Math";
 // import RGBShiftEffect from "./animations/about/RGBShiftEffect";
 // import { initWipeEffect } from "./animations/imgWhipe";
 
 // Function to check the current page
+const isHomePage = () => window.location.pathname === "/";
 const isWorkPage = () => window.location.pathname === "/work";
 const isAboutPage = () => window.location.pathname === "/about";
 const isContactPage = () => window.location.pathname === "/contact";
@@ -34,7 +39,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   initLoadTransition();
   // Page load animation
-  pageLoadAnimation();
+  //pageLoadAnimation();
 
   // General scripts for all pages
   NavLinkAnimations();
@@ -53,12 +58,18 @@ window.addEventListener("DOMContentLoaded", () => {
   // initWipeEffect();
 
   // Scripts specific to the /work page
+  if (isHomePage()) {
+    homeLoad();
+  }
+
+  // Scripts specific to the /work page
   if (isWorkPage()) {
     initSwipers();
   }
 
   // Scripts specific to the /about page
   if (isAboutPage()) {
+    aboutLoad();
     initSimulation();
     initHeadline();
   }
