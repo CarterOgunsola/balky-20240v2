@@ -57,7 +57,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // initWipeEffect();
 
-  // Scripts specific to the /work page
+  // Scripts specific to the /home page
   if (isHomePage()) {
     homeLoad();
   }
