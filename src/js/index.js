@@ -20,9 +20,11 @@ import { utahTime } from "./animations/utahTime";
 import { initLoadTransition } from "./animations/loadTransition";
 import { initializeVideoPlayers } from "./animations/vidPlyr";
 import workScroll from "./animations/workpage/workScroll";
+import { glitchHover } from "./animations/glitchHover";
 //start of page_load_triggers
 import { homeLoad } from "./animations/pageload/homeLoad";
 import { aboutLoad } from "./animations/pageload/aboutLoad";
+import { customCursor } from "./animations/cursor";
 //end of page_load_triggers
 //import Math from "./animations/about/Math";
 // import RGBShiftEffect from "./animations/about/RGBShiftEffect";
@@ -30,7 +32,8 @@ import { aboutLoad } from "./animations/pageload/aboutLoad";
 
 // Function to check the current page
 const isHomePage = () => window.location.pathname === "/";
-const isWorkPage = () => window.location.pathname === "/work-latest";
+const isWorkPage = () => window.location.pathname === "/work";
+const isWorkCmsPage = () => window.location.pathname.startsWith("/work/");
 const isAboutPage = () => window.location.pathname === "/about";
 const isContactPage = () => window.location.pathname === "/contact";
 
@@ -43,8 +46,9 @@ window.addEventListener("DOMContentLoaded", () => {
   //pageLoadAnimation();
 
   // General scripts for all pages
+
   NavLinkAnimations();
-  gridImgClick();
+
   initClientLogoAnimation();
   initializeMarquee();
   initializeWebGLEffects();
@@ -61,12 +65,20 @@ window.addEventListener("DOMContentLoaded", () => {
   // Scripts specific to the /home page
   if (isHomePage()) {
     homeLoad();
+    gridImgClick();
+    customCursor();
   }
 
   // Scripts specific to the /work page
   if (isWorkPage()) {
     // initSwipers();
-    workScroll();
+    // workScroll();
+  }
+
+  // Scripts specific to the /work/:slug page
+  if (isWorkCmsPage()) {
+    glitchHover();
+    customCursor();
   }
 
   // Scripts specific to the /about page
@@ -74,12 +86,16 @@ window.addEventListener("DOMContentLoaded", () => {
     aboutLoad();
     initSimulation();
     initHeadline();
+    glitchHover();
   }
 
   // Scripts specific to the /contact page
   if (isContactPage()) {
     initHeadline();
+    glitchHover();
   }
+
+  UnicornStudio.init();
 });
 
 console.log("Hello Balky!");

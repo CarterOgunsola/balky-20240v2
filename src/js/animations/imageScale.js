@@ -9,9 +9,9 @@ const config = {
   imgScaleUp: 1.2,
   imgScaleDown: 1,
   imgScaleDuration: 0.4, // seconds
-  mainAnimationDuration: 0.9, // seconds
+  mainAnimationDuration: 0.8, // seconds
   ease: "power2.inOut",
-  blackAndWhiteDuration: 0.5, // seconds
+  blackAndWhiteDuration: 0.5, // seconds,
 };
 
 let activeElement = null;
@@ -21,9 +21,18 @@ let isAnimating = false; // Flag to track animation status
 
 export function gridImgClick() {
   const mainElements = document.querySelectorAll('[data-scale-img="main"]');
+  const wrapper = document.querySelector('[data-scale-img="wrapper"]');
+
+  if (!wrapper) {
+    console.error("Wrapper element not found");
+    return;
+  }
 
   mainElements.forEach((main) => {
     main.addEventListener("click", (event) => {
+      // Prevent activating another element during animation
+      if (isAnimating) return;
+
       event.stopPropagation(); // Prevent click event from propagating to the document
       if (returnTimeout) {
         clearTimeout(returnTimeout);
@@ -36,15 +45,16 @@ export function gridImgClick() {
         return;
       }
 
+      // Handle active element logic
       if (activeElement === main) {
-        returnToOriginal(activeElement);
+        returnToOriginal(activeElement, wrapper);
         activeElement = null;
         return; // Already active, revert back to original state
       }
 
       if (activeElement) {
         previousActiveElement = activeElement;
-        returnToOriginal(previousActiveElement, true);
+        returnToOriginal(previousActiveElement, wrapper, true);
       }
 
       activeElement = main;
@@ -59,10 +69,11 @@ export function gridImgClick() {
         gsap.set(previousActiveElement, { zIndex: config.zIndex });
       }
 
+      wrapper.classList.add("is--active");
+
       const state = Flip.getState(main);
       isAnimating = true; // Set animation flag to true
 
-      // Create a timeline for the image bouncy effect
       const tl = gsap.timeline();
 
       tl.to(img, {
@@ -75,22 +86,18 @@ export function gridImgClick() {
         ease: config.ease,
       });
 
-      // Position the main element on top of the target element
       Flip.fit(main, target, { scale: true });
 
-      // Animate from the recorded state to the current one
       Flip.from(state, {
         duration: config.mainAnimationDuration,
         ease: config.ease,
         scale: true,
         onComplete: () => {
           isAnimating = false; // Reset animation flag
-          // Ensure the image scale is reset after the main element reaches the target
           gsap.set(img, { scale: config.imgScaleDown });
         },
       });
 
-      // Set all other elements to black & white
       gsap.to(mainElements, {
         filter: "grayscale(0%)",
         duration: config.blackAndWhiteDuration,
@@ -102,43 +109,60 @@ export function gridImgClick() {
     });
   });
 
-  // Listen for clicks anywhere on the document to deactivate the active element
   document.addEventListener("click", () => {
     if (activeElement && !isAnimating) {
-      returnToOriginal(activeElement);
+      returnToOriginal(activeElement, wrapper);
+      activeElement = null;
+    }
+  });
+
+  wrapper.addEventListener("click", () => {
+    if (activeElement && !isAnimating) {
+      returnToOriginal(activeElement, wrapper);
       activeElement = null;
     }
   });
 }
 
-function returnToOriginal(element, keepHighZIndex = false) {
+function returnToOriginal(element, wrapper, keepHighZIndex = false) {
   const state = Flip.getState(element);
   const img = element.querySelector('[data-scale-img="img"]');
   isAnimating = true; // Set animation flag to true
 
-  // Move the element back to its original position
+  // Ensure the wrapper class is removed after the return animation completes
+  gsap.to(wrapper, {
+    // delay: config.returnDelay / 3000, // Convert milliseconds to seconds
+    delay: 0.05, // Convert milliseconds to seconds
+    onComplete: () => {
+      wrapper.classList.remove("is--active");
+    },
+  });
+
+  // Reset styles for the returning element
   gsap.set(element, { clearProps: "all" });
 
-  // Reset the image scale before starting the animation back
   if (img) {
     gsap.set(img, { scale: config.imgScaleDown });
   }
 
+  // Animate back to original position using Flip
   Flip.from(state, {
-    duration: config.mainAnimationDuration,
+    // duration: config.mainAnimationDuration,
+    duration: config.mainAnimationDuration / 1.2,
     ease: config.ease,
     scale: true,
     onComplete: () => {
       isAnimating = false; // Reset animation flag
-      // Reset zIndex to original state unless keepHighZIndex is true
       if (!keepHighZIndex) {
         gsap.set(element, { zIndex: "" });
       } else {
-        // If keepHighZIndex is true, reset zIndex after a small delay to allow the animation to finish cleanly
         setTimeout(() => {
           gsap.set(element, { zIndex: "" });
         }, config.mainAnimationDuration * 1000);
       }
     },
   });
+
+  // Temporarily increase z-index of the returning element
+  gsap.set(element, { zIndex: config.zIndex + 1 });
 }

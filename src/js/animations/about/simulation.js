@@ -1,4 +1,3 @@
-// src/js/animations/about/simulation.js
 import Matter from "matter-js";
 
 export function initSimulation() {
@@ -11,14 +10,17 @@ export function initSimulation() {
     World,
     Bodies,
     Runner,
+    Bounds,
+    Body, // We'll need Body for scaling
   } = Matter;
 
   const GRAVITY_X = -0.4;
   const GRAVITY_Y = 0.1;
 
+  let oldWidth, oldHeight; // for scaling references
+
   const engine = Engine.create();
   const world = engine.world;
-
   engine.gravity.x = GRAVITY_X;
   engine.gravity.y = GRAVITY_Y;
 
@@ -30,6 +32,9 @@ export function initSimulation() {
 
   let containerWidth = containerElement.clientWidth + 2;
   let containerHeight = containerElement.clientHeight + 2;
+  // Keep track of these for scaling
+  oldWidth = containerWidth;
+  oldHeight = containerHeight;
 
   const render = Render.create({
     element: containerElement,
@@ -43,6 +48,8 @@ export function initSimulation() {
     },
   });
 
+  let boundaries = [];
+
   const createStaticBoundary = (x, y, width, height, options) => {
     return Bodies.rectangle(x, y, width, height, {
       isStatic: true,
@@ -50,34 +57,45 @@ export function initSimulation() {
     });
   };
 
-  const ground = createStaticBoundary(
-    containerWidth / 2 + 160,
-    containerHeight + 80,
-    containerWidth + 320,
-    160,
-    { render: { fillStyle: "#1A1A1A" } }
-  );
-  const wallLeft = createStaticBoundary(
-    -80,
-    containerHeight / 2,
-    160,
-    containerHeight,
-    {}
-  );
-  const wallRight = createStaticBoundary(
-    containerWidth + 80,
-    containerHeight / 2,
-    160,
-    containerHeight,
-    {}
-  );
-  const roof = createStaticBoundary(
-    containerWidth / 2 + 160,
-    -80,
-    containerWidth + 320,
-    160,
-    {}
-  );
+  const createBoundaries = () => {
+    boundaries.forEach((body) => World.remove(world, body));
+    boundaries = [];
+
+    const ground = createStaticBoundary(
+      containerWidth / 2 + 160,
+      containerHeight + 80,
+      containerWidth + 320,
+      160,
+      { render: { fillStyle: "#1A1A1A" } }
+    );
+    const wallLeft = createStaticBoundary(
+      -80,
+      containerHeight / 2,
+      160,
+      containerHeight,
+      {}
+    );
+    const wallRight = createStaticBoundary(
+      containerWidth + 80,
+      containerHeight / 2,
+      160,
+      containerHeight,
+      {}
+    );
+    const roof = createStaticBoundary(
+      containerWidth / 2 + 160,
+      -80,
+      containerWidth + 320,
+      160,
+      {}
+    );
+
+    boundaries.push(ground, wallLeft, wallRight, roof);
+    World.add(world, boundaries);
+  };
+
+  // set up boundaries
+  createBoundaries();
 
   const createTag = (text, width, height, url) => ({
     text,
@@ -103,6 +121,7 @@ export function initSimulation() {
     );
   };
 
+  // Sample tags
   const baseTags = [
     createTag(
       "B",
@@ -142,10 +161,13 @@ export function initSimulation() {
     ),
   ];
 
+  // Duplicate tags if you want more
   const tags = [];
   const duplicationFactor = 1.5;
   for (let i = 0; i < duplicationFactor; i++) {
-    baseTags.forEach((tag) => tags.push({ ...tag }));
+    baseTags.forEach((tag) => {
+      tags.push({ ...tag });
+    });
   }
 
   const getRandomPosition = (maxWidth, maxHeight) => ({
@@ -157,9 +179,12 @@ export function initSimulation() {
     y: (Math.random() - 0.5) * 10,
   });
 
+  // Keep reference of all created tag bodies
+  let tagBodies = [];
+
   preloadImages(tags)
     .then(() => {
-      const tagBodies = tags.map((tag) => {
+      tagBodies = tags.map((tag) => {
         const position = getRandomPosition(containerWidth, containerHeight / 2);
         const velocity = getRandomVelocity();
         return Bodies.rectangle(position.x, position.y, tag.width, tag.height, {
@@ -169,37 +194,34 @@ export function initSimulation() {
         });
       });
 
-      World.add(engine.world, [
-        ground,
-        wallLeft,
-        wallRight,
-        roof,
-        ...tagBodies,
-      ]);
-
-      Matter.Runner.run(engine);
+      World.add(world, tagBodies);
+      Runner.run(engine);
       Render.run(render);
     })
     .catch((error) => {
       console.error("Failed to load images:", error);
     });
 
+  // Mouse constraints
   const mouse = Mouse.create(render.canvas);
   const mouseConstraint = MouseConstraint.create(engine, {
     mouse: mouse,
-    constraint: { stiffness: 0.2, render: { visible: false } },
+    constraint: {
+      stiffness: 0.2,
+      render: { visible: false },
+    },
   });
-
   World.add(world, mouseConstraint);
   render.mouse = mouse;
 
+  // Remove default matter wheel events
   const removeEventListeners = () => {
     mouse.element.removeEventListener("mousewheel", mouse.mousewheel);
     mouse.element.removeEventListener("DOMMouseScroll", mouse.mousewheel);
   };
-
   removeEventListeners();
 
+  // Simple click detection
   let click = false;
   const onMouseDown = () => (click = true);
   const onMouseMove = () => (click = false);
@@ -209,31 +231,13 @@ export function initSimulation() {
   document.addEventListener("mousemove", onMouseMove);
   document.addEventListener("mouseup", onMouseUp);
 
-  Events.on(mouseConstraint, "mouseup", (event) => {
-    const mouseConstraint = event.source;
-    const bodies = engine.world.bodies;
-    if (!mouseConstraint.bodyB) {
-      for (let body of bodies) {
-        if (
-          click &&
-          Matter.Bounds.contains(body.bounds, mouseConstraint.mouse.position)
-        ) {
-          const bodyUrl = body.render.sprite.texture;
-          if (bodyUrl) {
-            window.open(bodyUrl, "_blank");
-          }
-          break;
-        }
-      }
-    }
-  });
-
-  Matter.Runner.run(engine);
-  Render.run(render);
-
   const resizeCanvas = () => {
+    oldWidth = render.options.width;
+    oldHeight = render.options.height;
+
     containerWidth = containerElement.clientWidth + 2;
     containerHeight = containerElement.clientHeight + 2;
+
     render.canvas.width = containerWidth * render.options.pixelRatio;
     render.canvas.height = containerHeight * render.options.pixelRatio;
     render.canvas.style.width = `${containerWidth}px`;
@@ -242,17 +246,44 @@ export function initSimulation() {
     render.options.height = containerHeight;
   };
 
-  window.addEventListener("resize", () => {
-    resizeCanvas();
-    // You may need to reposition and resize the bodies
-  });
+  // Option 1 (SIMPLE): Re-randomize positions or re-init everything on resize
+  // Option 2 (SCALING): Scale all existing bodies so they fit within new container
 
-  // Cleanup event listeners when simulation is stopped or reinitialized
+  const scaleBodiesToFit = () => {
+    // If old width or old height is 0, skip
+    if (!oldWidth || !oldHeight) return;
+
+    const scaleX = containerWidth / oldWidth;
+    const scaleY = containerHeight / oldHeight;
+
+    // For each body, scale the body geometry and reposition
+    tagBodies.forEach((body) => {
+      // Scale body shape
+      Body.scale(body, scaleX, scaleY);
+
+      // Reposition body according to scale
+      const newX = body.position.x * scaleX;
+      const newY = body.position.y * scaleY;
+      Body.setPosition(body, { x: newX, y: newY });
+    });
+  };
+
+  const handleResize = () => {
+    resizeCanvas();
+    // Optionally we can scale bodies to new container
+    scaleBodiesToFit();
+    // Then re-create boundaries
+    createBoundaries();
+  };
+
+  window.addEventListener("resize", handleResize);
+
+  // Cleanup
   return () => {
     document.removeEventListener("mousedown", onMouseDown);
     document.removeEventListener("mousemove", onMouseMove);
     document.removeEventListener("mouseup", onMouseUp);
     removeEventListeners();
-    window.removeEventListener("resize", resizeCanvas);
+    window.removeEventListener("resize", handleResize);
   };
 }
