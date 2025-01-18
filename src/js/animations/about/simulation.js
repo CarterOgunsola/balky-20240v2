@@ -2,8 +2,16 @@
 import Matter from "matter-js";
 
 export function initSimulation() {
-  const { Engine, Render, Events, MouseConstraint, Mouse, World, Bodies } =
-    Matter;
+  const {
+    Engine,
+    Render,
+    Events,
+    MouseConstraint,
+    Mouse,
+    World,
+    Bodies,
+    Runner,
+  } = Matter;
 
   const GRAVITY_X = -0.4;
   const GRAVITY_Y = 0.1;
@@ -11,8 +19,8 @@ export function initSimulation() {
   const engine = Engine.create();
   const world = engine.world;
 
-  engine.world.gravity.y = GRAVITY_Y;
-  engine.world.gravity.x = GRAVITY_X;
+  engine.gravity.x = GRAVITY_X;
+  engine.gravity.y = GRAVITY_Y;
 
   const containerElement = document.querySelector(".tag-canvas");
   if (!containerElement) {
@@ -78,6 +86,23 @@ export function initSimulation() {
     url,
   });
 
+  const preloadImages = (tags) => {
+    return Promise.all(
+      tags.map(
+        (tag) =>
+          new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => {
+              console.error(`Failed to load image: ${tag.url}`);
+              reject(new Error(`Image load error for ${tag.url}`));
+            };
+            img.src = tag.url;
+          })
+      )
+    );
+  };
+
   const baseTags = [
     createTag(
       "B",
@@ -132,17 +157,32 @@ export function initSimulation() {
     y: (Math.random() - 0.5) * 10,
   });
 
-  const tagBodies = tags.map((tag) => {
-    const position = getRandomPosition(containerWidth, containerHeight / 2);
-    const velocity = getRandomVelocity();
-    return Bodies.rectangle(position.x, position.y, tag.width, tag.height, {
-      chamfer: { radius: 20 },
-      render: { sprite: { texture: tag.url, xScale: 1, yScale: 1 } },
-      velocity: { x: velocity.x, y: velocity.y },
-    });
-  });
+  preloadImages(tags)
+    .then(() => {
+      const tagBodies = tags.map((tag) => {
+        const position = getRandomPosition(containerWidth, containerHeight / 2);
+        const velocity = getRandomVelocity();
+        return Bodies.rectangle(position.x, position.y, tag.width, tag.height, {
+          chamfer: { radius: 20 },
+          render: { sprite: { texture: tag.url, xScale: 1, yScale: 1 } },
+          velocity: { x: velocity.x, y: velocity.y },
+        });
+      });
 
-  World.add(engine.world, [ground, wallLeft, wallRight, roof, ...tagBodies]);
+      World.add(engine.world, [
+        ground,
+        wallLeft,
+        wallRight,
+        roof,
+        ...tagBodies,
+      ]);
+
+      Matter.Runner.run(engine);
+      Render.run(render);
+    })
+    .catch((error) => {
+      console.error("Failed to load images:", error);
+    });
 
   const mouse = Mouse.create(render.canvas);
   const mouseConstraint = MouseConstraint.create(engine, {
@@ -188,7 +228,7 @@ export function initSimulation() {
     }
   });
 
-  Engine.run(engine);
+  Matter.Runner.run(engine);
   Render.run(render);
 
   const resizeCanvas = () => {

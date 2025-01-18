@@ -19,6 +19,7 @@ import { genAnimation } from "./animations/genAnimation";
 import { utahTime } from "./animations/utahTime";
 import { initLoadTransition } from "./animations/loadTransition";
 import { initializeVideoPlayers } from "./animations/vidPlyr";
+import workScroll from "./animations/workpage/workScroll";
 //start of page_load_triggers
 import { homeLoad } from "./animations/pageload/homeLoad";
 import { aboutLoad } from "./animations/pageload/aboutLoad";
@@ -29,7 +30,7 @@ import { aboutLoad } from "./animations/pageload/aboutLoad";
 
 // Function to check the current page
 const isHomePage = () => window.location.pathname === "/";
-const isWorkPage = () => window.location.pathname === "/work";
+const isWorkPage = () => window.location.pathname === "/work-latest";
 const isAboutPage = () => window.location.pathname === "/about";
 const isContactPage = () => window.location.pathname === "/contact";
 
@@ -64,7 +65,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Scripts specific to the /work page
   if (isWorkPage()) {
-    initSwipers();
+    // initSwipers();
+    workScroll();
   }
 
   // Scripts specific to the /about page
