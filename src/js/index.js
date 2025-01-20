@@ -59,6 +59,7 @@ window.addEventListener("DOMContentLoaded", () => {
   genAnimation();
   utahTime();
   initializeVideoPlayers();
+  customCursor();
 
   // initWipeEffect();
 
@@ -66,7 +67,6 @@ window.addEventListener("DOMContentLoaded", () => {
   if (isHomePage()) {
     homeLoad();
     gridImgClick();
-    customCursor();
   }
 
   // Scripts specific to the /work page
@@ -78,7 +78,6 @@ window.addEventListener("DOMContentLoaded", () => {
   // Scripts specific to the /work/:slug page
   if (isWorkCmsPage()) {
     glitchHover();
-    customCursor();
   }
 
   // Scripts specific to the /about page
