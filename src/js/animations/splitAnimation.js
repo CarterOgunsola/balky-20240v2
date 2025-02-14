@@ -102,7 +102,7 @@ class TextAnimation extends Observe {
     const config = {
       margin: item.dataset.obsM || "10px",
       threshold: +item.dataset.obsT || 0,
-      once: item.dataset.obsOnce === "true",
+      once: item.dataset.obsOnce !== "false",
       aSplit: item.dataset.aSplit || "word",
       aDuration: item.dataset.aDuration ?? 1.9,
       aEach: item.dataset.aEach ?? 0.05,

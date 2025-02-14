@@ -14,7 +14,7 @@ export const homeLoad = () => {
 
   // Function to set the initial state of elements
   const setInitialState = () => {
-    gsap.set("[data-home-split='hero-text'] .line", { y: 105 });
+    gsap.set("[data-home-split='hero-text'] .line", { y: 120 });
     gsap.set("[data-home-split='hero-pg'] .line", { y: 100 });
     gsap.set("[data-home-load='hero-scroll']", { opacity: 0, y: 50 });
     gsap.set("[data-home-load='hero-vid']", {
