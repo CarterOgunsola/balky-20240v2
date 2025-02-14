@@ -1,4 +1,5 @@
 import { gsap } from "gsap";
+import { windowScroll } from "../utils/windowScroll";
 
 export function initLoadTransition() {
   // Check if it's the first visit
@@ -41,13 +42,15 @@ export function initLoadTransition() {
       )
       .to(loaderWrap, { height: "0%", duration: 1, ease: "expo.out" }, "-=0.5")
       .add(() => {
-        console.log("Page load trigger clicked (first visit)");
         pageLoadTrigger.click();
       }, "-=0.751");
   };
 
   // Function to animate elements for page-to-page transitions
   const pageToPageTransition = (href) => {
+    // Add immediate scroll reset
+    window.scrollTo(0, 0);
+
     gsap.set(pageLoader, { display: "block" });
     gsap.set(brandLogo, { yPercent: 100 });
     gsap.set(imgWraps, { scale: 0 });
@@ -67,7 +70,6 @@ export function initLoadTransition() {
     tl.to(loaderWrap, { height: "100%", duration: 0.8, ease: "expo.out" }, 0)
       .to(brandLogo, { yPercent: 0, duration: 1, ease: "expo.inOut" }, "-=1")
       .add(() => {
-        console.log("Page load trigger clicked (page-to-page transition)");
         pageLoadTrigger.click();
       }, "-=0.751");
   };
@@ -93,14 +95,17 @@ export function initLoadTransition() {
   } else {
     // Animation for back button navigation
     gsap.set(pageLoader, { display: "block" });
-    gsap.set(loaderWrap, { position: "absolute", top: 0, bottom: "auto" }); // Set to top
+    gsap.set(loaderWrap, { position: "absolute", top: 0, bottom: "auto" });
     gsap.set(brandLogo, { yPercent: 0 });
+
+    // INSTANT SCROLL BEFORE ANIMATION
+    window.scrollTo(0, 0);
+
     const tl = gsap.timeline();
     tl.to(brandLogo, { yPercent: -100, duration: 1, ease: "expo.inOut" }, 0)
       .to(loaderWrap, { height: "0%", duration: 1, ease: "expo.out" }, "-=0.5")
       .set(pageLoader, { display: "none" })
       .add(() => {
-        console.log("Page load trigger clicked (back button navigation)");
         pageLoadTrigger.click();
       }, "-=0.751");
   }

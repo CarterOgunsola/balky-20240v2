@@ -9,8 +9,6 @@ class EffectShell {
     if (!this.container || !this.itemsWrapper) return;
     this.setup();
     this.initEffectShell().then(() => {
-      console.log("load finished");
-      this.isLoaded = true;
       if (this.isMouseOver) this.onMouseOver(this.tempItemIndex);
       this.tempItemIndex = null;
     });

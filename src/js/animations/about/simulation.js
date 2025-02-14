@@ -225,7 +225,7 @@ export function initSimulation() {
   let click = false;
   const onMouseDown = () => (click = true);
   const onMouseMove = () => (click = false);
-  const onMouseUp = () => console.log(click ? "click" : "drag");
+  const onMouseUp = () => {};
 
   document.addEventListener("mousedown", onMouseDown);
   document.addEventListener("mousemove", onMouseMove);

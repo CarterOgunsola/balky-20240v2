@@ -25,6 +25,7 @@ import { glitchHover } from "./animations/glitchHover";
 import { homeLoad } from "./animations/pageload/homeLoad";
 import { aboutLoad } from "./animations/pageload/aboutLoad";
 import { customCursor } from "./animations/cursor";
+import { windowScroll } from "./utils/windowScroll";
 //end of page_load_triggers
 //import Math from "./animations/about/Math";
 // import RGBShiftEffect from "./animations/about/RGBShiftEffect";
@@ -39,8 +40,10 @@ const isContactPage = () => window.location.pathname === "/contact";
 
 // Mandatory scripts to load first
 window.addEventListener("DOMContentLoaded", () => {
-  new StaggerText("data-a-split");
+  // Instant scroll before any other operations
+  window.scrollTo(0, 0); // Instant version
 
+  new StaggerText("data-a-split");
   initLoadTransition();
   // Page load animation
   //pageLoadAnimation();
@@ -95,6 +98,10 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   UnicornStudio.init();
+  console.log("🚀 Crafted with passion by Balky Studio");
 });
 
-console.log("Hello Balky!");
+// Add popstate listener for back/forward navigation
+window.addEventListener("popstate", () => {
+  window.scrollTo(0, 0);
+});

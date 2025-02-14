@@ -72,8 +72,6 @@ export const homeLoad = () => {
         },
         "-=1"
       );
-
-    console.log("Home page load animation triggered");
   };
 
   // Split text elements on page load

@@ -56,8 +56,6 @@ export const aboutLoad = () => {
         },
         "-=1.2"
       );
-
-    console.log("About page load animation triggered");
   };
 
   // Split text elements on page load
